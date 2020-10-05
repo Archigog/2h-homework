@@ -1,0 +1,13 @@
+<div class="ticket-details-container">
+  <a [routerLink]="'../'">&larr; Back</a>
+  <h1>Ticket #{{ticket.id}}</h1>
+  <div>Completed : {{ ticket.completed ? 'Yes' : 'No' }}</div>
+  <div id="assignee">Assignee :
+    <span *ngIf="assignee">{{assignee.name}} (ID {{assignee.id}})</span>
+    <span *ngIf="!assignee">No assignee</span>
+  </div>
+
+  <br>
+  <h3 class="mt-5">Description</h3>
+  <p>{{ticket.description}}</p>
+</div>

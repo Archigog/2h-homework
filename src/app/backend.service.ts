@@ -11,6 +11,7 @@ import { User } from '../interfaces/user.interface';
 
 function randomDelay() {
     return Math.random() * 4000;
+    // return Math.random();
 }
 
 @Injectable()
@@ -27,7 +28,7 @@ export class BackendService {
             completed: false,
             assigneeId: 111,
             description: 'Move the desk to the new location'
-        }
+        },
     ];
 
     public storedUsers: User[] = [{ id: 111, name: 'Victor' }];

@@ -1,0 +1,10 @@
+@import "vendor.css";
+
+@import "components/card.css";
+
+html, body {
+  background-color: #333;
+  color: #eee;
+  font-family: "Roboto", sans-serif;
+  font-size: large;
+}

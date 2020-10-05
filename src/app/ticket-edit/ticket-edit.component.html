@@ -1,0 +1,21 @@
+<div class="ticket-details-container">
+  <h1>Create a new ticket</h1>
+  <form (ngSubmit)="save()">
+<!--    <label>-->
+<!--      Assignee :-->
+<!--      <input [(ngModel)]="assignee" type="text">-->
+<!--    </label>-->
+
+    <br>
+
+    <label>
+      Description :
+      <textarea class="col-12" [(ngModel)]="description" name="description"></textarea>
+    </label>
+
+    <button class="col-12 btn btn-success mt-5" type="submit">
+      Create
+    </button>
+  </form>
+
+</div>
