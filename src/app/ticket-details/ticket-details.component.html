@@ -1,13 +1,31 @@
 <div class="ticket-details-container">
-  <a [routerLink]="'../'">&larr; Back</a>
-  <h1>Ticket #{{ticket.id}}</h1>
-  <div>Completed : {{ ticket.completed ? 'Yes' : 'No' }}</div>
-  <div id="assignee">Assignee :
-    <span *ngIf="assignee">{{assignee.name}} (ID {{assignee.id}})</span>
-    <span *ngIf="!assignee">No assignee</span>
+  <div class="card card-body">
+    <div *ngIf="!(isLoading$ | async)">
+      <h1>Ticket #{{ticket.id}}</h1>
+      <div>Completed : {{ ticket.completed ? 'Yes' : 'No' }}</div>
+      <div id="assignee">Assignee :
+        <span *ngIf="ticket.assignee">{{ticket.assignee.name}} (ID {{ticket.assignee.id}})</span>
+        <span *ngIf="!ticket.assignee">No assignee</span>
+      </div>
+
+      <br>
+      <h3 class="mt-5">Description</h3>
+      <p>{{ticket.description}}</p>
+    </div>
   </div>
 
-  <br>
-  <h3 class="mt-5">Description</h3>
-  <p>{{ticket.description}}</p>
+  <div class="actions mt-5">
+    <button [routerLink]="'../'" class="btn btn-primary">
+      <span>&larr; Back</span>
+    </button>
+    <button [routerLink]="'edit'" class="btn btn-warning ml-1">
+      <span>Edit</span>
+    </button>
+    <button (click)="markAsComplete()" *ngIf="!ticket.completed" class="btn btn-success ml-1">
+      <span>Mark as complete</span>
+    </button>
+    <button (click)="markAsNotCompleted()" *ngIf="ticket.completed" class="btn btn-success ml-1">
+      <span>Mark as uncompleted</span>
+    </button>
+  </div>
 </div>

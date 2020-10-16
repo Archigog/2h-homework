@@ -20,13 +20,13 @@ export class BackendService {
         {
             id: 0,
             completed: false,
-            assigneeId: 111,
+            assignee: { id: 111, name: 'Victor' },
             description: 'Install a monitor arm'
         },
         {
             id: 1,
             completed: false,
-            assigneeId: 111,
+            assignee: { id: 111, name: 'Victor' },
             description: 'Move the desk to the new location'
         },
     ];
@@ -54,18 +54,41 @@ export class BackendService {
         return of(this.findUserById(id)).pipe(delay(randomDelay()));
     }
 
-    public newTicket(payload: { description: string }): Observable<Ticket> {
+    public newTicket(description: string, assigneeId?: number): Observable<Ticket> {
         const newTicket: Ticket = {
             id: ++this.lastId,
             completed: false,
-            assigneeId: null,
-            description: payload.description
+            assignee: null,
+            description: description
         };
+
+        if (assigneeId) {
+            newTicket.assignee = this.findUserById(+assigneeId);
+        }
 
         return of(newTicket).pipe(
             delay(randomDelay()),
             tap((ticket: Ticket) => this.storedTickets.push(ticket))
         );
+    }
+
+    public editTicket(ticketId: number, description: string, assigneeId?: number): Observable<Ticket> {
+        const foundTicket = this.findTicketById(+ticketId);
+
+        if (foundTicket) {
+            foundTicket.description = description;
+            if (assigneeId) {
+                foundTicket.assignee = this.findUserById(+assigneeId);
+            } else {
+                foundTicket.assignee = null;
+            }
+
+            return of(foundTicket).pipe(
+                delay(randomDelay())
+            );
+        }
+
+        return throwError(new Error('ticket not found'));
     }
 
     public assign(ticketId: number, userId: number): Observable<Ticket> {
@@ -76,7 +99,7 @@ export class BackendService {
             return of(foundTicket).pipe(
                 delay(randomDelay()),
                 tap((ticket: Ticket) => {
-                    ticket.assigneeId = +userId;
+                    ticket.assignee = user;
                 })
             );
         }
@@ -91,7 +114,7 @@ export class BackendService {
             return of(foundTicket).pipe(
                 delay(randomDelay()),
                 tap((ticket: Ticket) => {
-                    ticket.completed = true;
+                    ticket.completed = completed;
                 })
             );
         }

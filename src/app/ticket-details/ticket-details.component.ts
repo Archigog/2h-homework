@@ -1,7 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {Ticket} from "../../interfaces/ticket.interface";
-import {User} from "../../interfaces/user.interface";
+import {LoadingService} from "../core/loading/loading.service";
+import {Observable} from "rxjs";
+import {BackendService} from "../backend.service";
 
 @Component({
   selector: 'app-ticket-details',
@@ -10,18 +12,32 @@ import {User} from "../../interfaces/user.interface";
 })
 export class TicketDetailsComponent implements OnInit {
 
+  public readonly isLoading$: Observable<boolean> = this.loadingService.isLoading$;
+
   public ticket: Ticket;
-  public assignee: User;
 
   constructor(
       private route: ActivatedRoute,
+      private loadingService: LoadingService,
+      private backendService: BackendService
   ) {}
 
   ngOnInit(): void {
     this.route.data.subscribe(({data}) => {
-      this.ticket = data[0];
-      this.assignee = data[1];
+      this.loadingService.stop();
+      this.ticket = data;
     });
   }
 
+  public markAsComplete(): void {
+    this.backendService.complete(this.ticket.id, true).subscribe(ticket => {
+      this.ticket = ticket;
+    });
+  }
+
+  public markAsNotCompleted(): void {
+    this.backendService.complete(this.ticket.id, false).subscribe(ticket => {
+      this.ticket = ticket;
+    });
+  }
 }
