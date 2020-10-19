@@ -4,27 +4,36 @@ import {TicketDetailsComponent} from './ticket-details.component';
 import {of} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {AppRoutingModule} from "../app-routing.module";
+import {BackendService} from "../backend.service";
+import {Ticket} from "../../interfaces/ticket.interface";
+import {User} from "../../interfaces/user.interface";
 
 describe('TicketDetailsComponent', () => {
   let component: TicketDetailsComponent;
   let fixture: ComponentFixture<TicketDetailsComponent>;
+  let mockUser: User;
+  let mockTicket: Ticket;
+  let backendServiceSpy;
   let activatedRouteSpy;
-  let mockData;
 
   beforeEach(async () => {
-    mockData = [
-      {
-        id: 0,
-        completed: false,
-        assigneeId: 111,
-        description: 'Install a monitor arm'
-      },
-      {id: 111, name: 'Victor'}
-    ];
+    mockUser = {id: 111, name: 'Victor'};
+    mockTicket = {
+      id: 0,
+      completed: false,
+      assignee: mockUser,
+      description: 'Install a monitor arm'
+    };
+
+    backendServiceSpy = jasmine.createSpyObj({
+      tickets: of([mockTicket]),
+      users: of([mockUser])
+    });
+
     activatedRouteSpy = {
       snapshot: {},
       data: of({
-        data: mockData
+        data: mockTicket
       })
     };
 
@@ -33,6 +42,7 @@ describe('TicketDetailsComponent', () => {
       imports: [AppRoutingModule],
       providers: [
         {provide: ActivatedRoute, useValue: activatedRouteSpy},
+        {provide: BackendService, useValue: backendServiceSpy},
       ]
     })
     .compileComponents();
